@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">MAD: Level 4 - Task 2</string>
+
+    <string name="title_welcome">Welcome</string>
+    <string name="text_subtitle">Instructions: select rock, paper or scissors to play.</string>
+
+    <string name="text_stats_label">Your all time statistics</string>
+    <string name="text_stats" />
+
+    <string name="text_vs_label">V.S.</string>
+    <string name="text_your_result_label">You</string>
+    <string name="text_computer_result_label">Computer</string>
+
+    <string name="text_result_game" />
+    <string name="img_description_result_you" />
+    <string name="img_description_result_computer" />
+    <string name="btn_rock_description" />
+    <string name="btn_paper_description" />
+    <string name="btn_scissors_description" />
+    <string name="btn_view_history_description" />
 </resources>
