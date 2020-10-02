@@ -1,4 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.MainActivity"
-/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.MainActivity">
+
+    <item
+        android:id="@+id/menuHistory"
+        android:icon="@drawable/ic_history_white_24dp"
+        android:title="@string/menu_icon_history"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menuClearHistory"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/menu_icon_clear_history"
+        app:showAsAction="ifRoom" />
+
+</menu>
