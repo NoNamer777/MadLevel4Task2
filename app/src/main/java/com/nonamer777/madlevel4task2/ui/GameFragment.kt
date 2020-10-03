@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import com.nonamer777.madlevel4task2.R
 import com.nonamer777.madlevel4task2.model.Game
 import com.nonamer777.madlevel4task2.model.Move
+import com.nonamer777.madlevel4task2.repository.GameRepository
 import kotlinx.android.synthetic.main.fragment_game.*
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * A simple [Fragment] subclass where the User can play a game of Rock, Paper, Scissors.
@@ -28,6 +32,12 @@ class GameFragment : Fragment() {
     /** The last game that was initiated. */
     private lateinit var lastGame: Game
 
+    /** The repository on which all games data is saves to and retrieved from. */
+    private lateinit var gameRepository: GameRepository
+
+    /** An asynchronous scope in witch mostly requests to the Game Repository are handled.  */
+    private val mainScope = CoroutineScope(Dispatchers.Main)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,8 +48,11 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Updates the UI with data from the previous session if that exists.
-        updateUI()
+        // Instantiate the Game Repository.
+        gameRepository = GameRepository(requireContext())
+
+        // Requests the necessary data from the database.
+        getDataFromDatabase()
 
         // Set click event listeners for the different Move buttons.
         btnPaper.setOnClickListener { playGame(Move.PAPER) }
@@ -50,32 +63,26 @@ class GameFragment : Fragment() {
     }
 
     /** Handles initiation of a game. */
-    private fun playGame(playerMove: Move) {
+    private fun playGame(userMove: Move) {
         // Generate a random move for the computer.
         val computerMove = generateComputerMove()
-        lastGame = Game(Date(), playerMove, computerMove)
 
-        // When the computer and player both have the same move, handle a draw situation.
-        if (playerMove == computerMove) {
-            drawGame()
-            return
-        }
+        // Create a new Game where the User presumably has lost the game.
+        lastGame = Game(userMove, computerMove)
 
-        // Handles losing or winning a game.
-        when(playerMove) {
-            Move.ROCK -> {
-                if (computerMove == Move.SCISSORS) winGame()
-                else loseGame()
-            }
-            Move.PAPER -> {
-                if (computerMove == Move.ROCK) winGame()
-                else loseGame()
-            }
-            Move.SCISSORS -> {
-                if (computerMove == Move.PAPER) winGame()
-                else loseGame()
-            }
+        // Checks the won / lose / draw state by comparing user and computer hands.
+        when {
+            // Rock beat scissors
+            userMove == Move.ROCK && computerMove == Move.SCISSORS -> lastGame.won = true
+            // Paper beat rock
+            userMove == Move.PAPER && computerMove == Move.ROCK -> lastGame.won = true
+            // Scissors beat paper
+            userMove == Move.SCISSORS && computerMove == Move.PAPER -> lastGame.won = true
+            // No one wins nor loses.
+            userMove == computerMove -> lastGame.draw = true
         }
+        persistLastGame()
+        getDataFromDatabase()
     }
 
     /** Generates a simple random computer move. */
@@ -89,31 +96,6 @@ class GameFragment : Fragment() {
         }
     }
 
-    /** Handles playing a draw game. */
-    private fun drawGame() {
-        lastGame.draw = true
-        lastGame.won = false
-
-        totalDraws++
-
-        updateUI()
-    }
-
-    /** Handles winning a game. */
-    private fun winGame() {
-        lastGame.won = true
-        totalWins++
-
-        updateUI()
-    }
-
-    /** Handles losing a game. */
-    private fun loseGame() {
-        totalLosses++
-
-        updateUI()
-    }
-
     /** Updates the UI based on the data from the last played match. */
     private fun updateUI() {
         textStats.text =
@@ -123,7 +105,7 @@ class GameFragment : Fragment() {
         if (!this::lastGame.isInitialized) return
 
         textResultGame.text = getMatchResult()
-        imgResultYou.setImageResource(lastGame.playerMove.img)
+        imgResultYou.setImageResource(lastGame.userMove.img)
         imgResultComputer.setImageResource(lastGame.computerMove.img)
     }
 
@@ -133,6 +115,29 @@ class GameFragment : Fragment() {
             lastGame.won -> "You've Won!"
             lastGame.draw -> "You've neither won nor lost"
             else -> "You've lost"
+        }
+    }
+
+    /** Gets all data necessary data from the database. */
+    private fun getDataFromDatabase() {
+        mainScope.launch {
+            lastGame = withContext(Dispatchers.IO) { gameRepository.getLastGame() }
+
+            totalWins = withContext(Dispatchers.IO) { gameRepository.getNumberOfWins() }
+
+            totalDraws = withContext(Dispatchers.IO) { gameRepository.getNumberOfDraws() }
+
+            totalLosses = withContext(Dispatchers.IO) { gameRepository.getNumberOfLosses() }
+
+            // Updates the UI after the data has been retrieved.
+            updateUI()
+        }
+    }
+
+    /** Saves the last game that was played into the database. */
+    private fun persistLastGame() {
+        mainScope.launch {
+            withContext(Dispatchers.IO) { gameRepository.saveGame(lastGame) }
         }
     }
 }
