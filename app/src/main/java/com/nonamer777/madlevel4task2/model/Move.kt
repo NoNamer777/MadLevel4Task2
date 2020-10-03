@@ -19,4 +19,16 @@ enum class Move (
 
     SCISSORS("scissors", R.drawable.scissors);
 
+    companion object{
+        /** Parses String values into Move values. */
+        fun parse(value: String): Move? {
+
+            return when (value) {
+                PAPER.value -> PAPER
+                ROCK.value -> ROCK
+                SCISSORS.value -> SCISSORS
+                else -> throw error("'$value' is not recognized as a correct move value.")
+            }
+        }
+    }
 }
