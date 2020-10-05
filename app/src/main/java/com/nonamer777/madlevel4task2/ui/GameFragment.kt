@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.nonamer777.madlevel4task2.R
 import com.nonamer777.madlevel4task2.model.Game
 import com.nonamer777.madlevel4task2.model.Move
-import com.nonamer777.madlevel4task2.repository.GameRepository
 import kotlinx.android.synthetic.main.fragment_game.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,10 +31,7 @@ class GameFragment : Fragment() {
     /** The last game that was initiated. */
     private lateinit var lastGame: Game
 
-    /** The repository on which all games data is saves to and retrieved from. */
-    private lateinit var gameRepository: GameRepository
-
-    /** An asynchronous scope in witch mostly requests to the Game Repository are handled.  */
+    /** An asynchronous scope in witch mostly requests to the Game Repository are handled. */
     private val mainScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
@@ -47,9 +43,6 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Instantiate the Game Repository.
-        gameRepository = GameRepository(requireContext())
 
         // Requests the necessary data from the database.
         getDataFromDatabase()
@@ -121,13 +114,13 @@ class GameFragment : Fragment() {
     /** Gets all data necessary data from the database. */
     private fun getDataFromDatabase() {
         mainScope.launch {
-            lastGame = withContext(Dispatchers.IO) { gameRepository.getLastGame() }
+            lastGame = withContext(Dispatchers.IO) { MainActivity.gamesRepo.getLastGame() }
 
-            totalWins = withContext(Dispatchers.IO) { gameRepository.getNumberOfWins() }
+            totalWins = withContext(Dispatchers.IO) { MainActivity.gamesRepo.getNumberOfWins() }
 
-            totalDraws = withContext(Dispatchers.IO) { gameRepository.getNumberOfDraws() }
+            totalDraws = withContext(Dispatchers.IO) { MainActivity.gamesRepo.getNumberOfDraws() }
 
-            totalLosses = withContext(Dispatchers.IO) { gameRepository.getNumberOfLosses() }
+            totalLosses = withContext(Dispatchers.IO) { MainActivity.gamesRepo.getNumberOfLosses() }
 
             // Updates the UI after the data has been retrieved.
             updateUI()
@@ -137,7 +130,7 @@ class GameFragment : Fragment() {
     /** Saves the last game that was played into the database. */
     private fun persistLastGame() {
         mainScope.launch {
-            withContext(Dispatchers.IO) { gameRepository.saveGame(lastGame) }
+            withContext(Dispatchers.IO) { MainActivity.gamesRepo.saveGame(lastGame) }
         }
     }
 }

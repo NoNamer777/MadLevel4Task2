@@ -70,45 +70,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textStats"
         app:layout_constraintVertical_bias="0.22000003" />
 
-    <ImageButton
-        android:id="@+id/btnRock"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:contentDescription="@string/btn_rock_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/rock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnPaper"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btnPaper"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:contentDescription="@string/btn_paper_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/paper"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnScissors"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnRock" />
-
-    <ImageButton
-        android:id="@+id/btnScissors"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:contentDescription="@string/btn_scissors_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/scissors"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnPaper" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
@@ -178,5 +139,44 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnRock"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/btn_rock_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/rock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnPaper"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnPaper"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/btn_paper_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/paper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnScissors"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnRock" />
+
+    <ImageButton
+        android:id="@+id/btnScissors"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/btn_scissors_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/scissors"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnPaper" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

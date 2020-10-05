@@ -3,16 +3,21 @@ package com.nonamer777.madlevel4task2.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.nonamer777.madlevel4task2.R
+import com.nonamer777.madlevel4task2.repository.GameRepository
 
 class MainActivity : AppCompatActivity() {
 
     /** Navigation controller for navigating */
     private lateinit var navController: NavController
+
+    companion object {
+        /** A Game Repository. */
+        lateinit var gamesRepo: GameRepository
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         navController = findNavController(R.id.nav_host_fragment)
+        gamesRepo = GameRepository(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,8 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.menuClearHistory -> {
-            // Todo replace with logic to clean up the game history.
-            Toast.makeText(this, "Clear History", Toast.LENGTH_LONG).show()
+            HistoryFragment.clearHistory()
 
             true
         }
